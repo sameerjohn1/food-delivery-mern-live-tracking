@@ -123,12 +123,12 @@ export const verifyOtp = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const { email, newpassword } = req.body;
+    const { email, newPassword } = req.body;
     const user = await User.findOne({ email });
     if (!user || !user.isOtpVerified) {
       return res.status(400).json({ message: "otp verification required" });
     }
-    const hashedPassword = await bcrypt.hash(newpassword, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.isOtpVerified = false;
     await user.save();

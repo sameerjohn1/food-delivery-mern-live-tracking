@@ -110,7 +110,7 @@ const ForgotPassword = () => {
                 OTP
               </label>
               <input
-                type="email"
+                type="text"
                 className="w-full border-[1px] border-gray-200 rounded-lg px-3 py-2 focus:outline-none "
                 placeholder="Enter OTP"
                 value={otp}
@@ -136,7 +136,7 @@ const ForgotPassword = () => {
                 New Password
               </label>
               <input
-                type="email"
+                type="password"
                 className="w-full border-[1px] border-gray-200 rounded-lg px-3 py-2 focus:outline-none "
                 placeholder="Enter New Password"
                 value={newPassword}
@@ -152,7 +152,7 @@ const ForgotPassword = () => {
                 Confirm Password
               </label>
               <input
-                type="email"
+                type="password"
                 className="w-full border-[1px] border-gray-200 rounded-lg px-3 py-2 focus:outline-none "
                 placeholder="Confirm Password"
                 value={confirmPassword}
