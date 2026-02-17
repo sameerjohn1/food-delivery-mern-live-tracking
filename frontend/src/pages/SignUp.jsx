@@ -4,6 +4,9 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { serverUrl } from "../App";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
+import { ClipLoader } from "react-spinners";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +16,8 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const primaryColor = "#ff4d2d";
   const hoverColor = "#e64323";
@@ -20,6 +25,7 @@ function SignUp() {
   const borderColor = "#ddd";
 
   const handleSignUp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/signup`,
@@ -34,6 +40,36 @@ function SignUp() {
       );
 
       console.log(result);
+      setError("");
+      setLoading(false);
+      navigate("/signin");
+    } catch (error) {
+      console.log(error);
+      setError(error?.response?.data?.message);
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    if (!mobile) {
+      return setError("Mobile number is required");
+    }
+
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    try {
+      const { data } = await axios.post(
+        `${serverUrl}/api/auth/google-auth`,
+        {
+          fullName: result.user.displayName,
+          email: result.user.email,
+          role,
+          mobile,
+        },
+        { withCredentials: true },
+      );
+
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -78,6 +114,7 @@ function SignUp() {
             }}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            required
           />
         </div>
 
@@ -98,6 +135,7 @@ function SignUp() {
             }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
@@ -118,6 +156,7 @@ function SignUp() {
             }}
             value={mobile}
             onChange={(e) => setMobile(e.target.value)}
+            required
           />
         </div>
 
@@ -139,6 +178,7 @@ function SignUp() {
               }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
             <button
               className="absolute right-3 top-[14px] text-gray-500 cursor-pointer"
@@ -181,11 +221,19 @@ function SignUp() {
         <button
           className={`w-full font-semibold py-2 rounded-lg transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer`}
           onClick={handleSignUp}
+          disabled={loading}
         >
-          Sign Up
+          {loading ? <ClipLoader size={20} /> : "Sign Up"}
         </button>
 
-        <button className="w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-100 cursor-pointer">
+        {error && (
+          <p className="text-red-500 text-center my-[10px]">*{error}</p>
+        )}
+
+        <button
+          className="w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200 border-gray-400 hover:bg-gray-100 cursor-pointer"
+          onClick={handleGoogleAuth}
+        >
           <FcGoogle size={20} />
           <span>Sign up with Google</span>
         </button>
