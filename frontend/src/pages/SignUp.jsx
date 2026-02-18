@@ -223,7 +223,7 @@ function SignUp() {
           onClick={handleSignUp}
           disabled={loading}
         >
-          {loading ? <ClipLoader size={20} /> : "Sign Up"}
+          {loading ? <ClipLoader size={20} color="#fff" /> : "Sign Up"}
         </button>
 
         {error && (
