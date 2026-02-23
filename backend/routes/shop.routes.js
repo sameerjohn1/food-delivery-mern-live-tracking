@@ -1,5 +1,5 @@
 import express from "express";
-import { createEditShop } from "../controllers/shop.controller.js";
+import { createEditShop, getMyShop } from "../controllers/shop.controller.js";
 import isAuth from "../middlewares/isAuth.js";
 import { upload } from "../middlewares/multer.js";
 const shopRouter = express.Router();
