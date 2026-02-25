@@ -30,7 +30,10 @@ const OwnerItemCard = ({ data }) => {
           <div className="text-[#ff4d2d] font-bold">{data.price}</div>
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-full hover:bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer ">
-              <FaPen size={16} />
+              <FaPen
+                size={16}
+                onClick={() => navigate(`/edit-food/${data._id}`)}
+              />
             </div>
             <div className="p-2 rounded-full hover:bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer ">
               <FaTrashAlt size={16} />
