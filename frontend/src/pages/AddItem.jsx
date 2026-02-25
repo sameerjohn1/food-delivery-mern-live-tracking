@@ -59,6 +59,7 @@ const AddItem = () => {
 
       dispatch(setMyShopData(result.data));
       console.log(result.data);
+      navigate("/");
     } catch (error) {
       console.log(error);
     }

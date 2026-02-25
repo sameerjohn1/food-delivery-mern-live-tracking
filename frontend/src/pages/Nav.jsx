@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { setUserData } from "../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const { userData, currentCity } = useSelector((state) => state.user);
@@ -17,6 +18,7 @@ const Nav = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -89,12 +91,18 @@ const Nav = () => {
           <>
             {myShopData && (
               <>
-                <button className="hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]">
+                <button
+                  className="hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]"
+                  onClick={() => navigate("/add-food")}
+                >
                   <FaPlus size={20} />
                   <span>Add Food Item</span>
                 </button>
 
-                <button className="md:hidden flex items-center  p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]">
+                <button
+                  className="md:hidden flex items-center  p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]"
+                  onClick={() => navigate("/add-food")}
+                >
                   <FaPlus size={20} />
                 </button>
               </>
@@ -159,9 +167,11 @@ const Nav = () => {
             <div className="text-[17px] font-semibold ">
               {userData?.fullName}
             </div>
-            <div className="md:hidden  font-semibold cursor-pointer ">
-              My Orders
-            </div>
+            {userData?.role == "user" && (
+              <div className="md:hidden  font-semibold cursor-pointer ">
+                My Orders
+              </div>
+            )}
 
             <div
               className="text-[#ff4d2d] font-semibold cursor-pointer"
