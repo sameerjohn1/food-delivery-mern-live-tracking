@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../redux/ownerSlice";
+import { ClipLoader } from "react-spinners";
 
 const AddItem = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const AddItem = () => {
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
   const [foodType, setFoodType] = useState("veg");
+  const [loading, setLoading] = useState(false);
   const categories = [
     "Snacks",
     "Main Course",
@@ -40,6 +42,7 @@ const AddItem = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -58,10 +61,11 @@ const AddItem = () => {
       );
 
       dispatch(setMyShopData(result.data));
-      console.log(result.data);
       navigate("/");
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -176,8 +180,9 @@ const AddItem = () => {
             className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md
           hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer"
             type="submit"
+            disabled={loading}
           >
-            Save
+            {loading ? <ClipLoader color="#fff" size={20} /> : "Save"}
           </button>
         </form>
       </div>
