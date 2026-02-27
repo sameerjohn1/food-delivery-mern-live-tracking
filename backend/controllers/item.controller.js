@@ -90,6 +90,10 @@ export const deleteItem = async (req, res) => {
     const shop = await Shop.findOne({ owner: req.userId });
     shop.items = shop.items.filter((i) => i._id !== item._id);
     await shop.save();
+    await shop.populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
 
     return res.status(200).json(shop);
   } catch (error) {
