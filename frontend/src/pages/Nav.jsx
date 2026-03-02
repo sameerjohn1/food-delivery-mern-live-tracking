@@ -33,7 +33,7 @@ const Nav = () => {
   return (
     <div
       className="w-full h-[80px] flex items-center justify-between md:justify-center gap-[30px]
-    px-[20px] fixed top-0 z-[9999] bg-[#fff9f6] overflow-visible "
+    px-[20px] fixed top-0 z-[9999] bg-[#fff9f6] overflow-visible"
     >
       {showSearch && userData.role == "user" && (
         <div className="w-[90%] h-[70px]  bg-white shadow-xl rounded-lg flex items-center gap-[20px] flex fixed top-[80px] left-[5%] md:hidden">
@@ -187,4 +187,3 @@ const Nav = () => {
 };
 
 export default Nav;
-// 9:08
