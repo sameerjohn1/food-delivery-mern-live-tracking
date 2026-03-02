@@ -3,11 +3,13 @@ import Nav from "../pages/Nav";
 import { categories } from "../category";
 import CategoryCard from "./CategoryCard";
 import { FaCircleArrowLeft, FaCircleArrowRight } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const UserDashboard = () => {
   const cateScrollRef = useRef();
   const [showLeftCateButton, setShowLeftCateButton] = useState(false);
   const [showRightCateButton, setShowRightCateButton] = useState(false);
+  const { currentCity } = useSelector((state) => state.user);
 
   const updateButton = (ref, showLeftButton, showRightButton) => {
     const element = ref.current;
@@ -30,6 +32,11 @@ const UserDashboard = () => {
 
   useEffect(() => {
     if (cateScrollRef.current) {
+      updateButton(
+        cateScrollRef,
+        setShowLeftCateButton,
+        setShowRightCateButton,
+      );
       cateScrollRef.current.addEventListener("scroll", () => {
         updateButton(
           cateScrollRef,
@@ -38,13 +45,22 @@ const UserDashboard = () => {
         );
       });
     }
-  }, []);
+
+    return () =>
+      cateScrollRef.current.removeEventListener("scroll", () => {
+        updateButton(
+          cateScrollRef,
+          setShowLeftCateButton,
+          setShowRightCateButton,
+        );
+      });
+  }, [categories]);
 
   return (
-    <div className="w-screen min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto">
+    <div className="w-full min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto">
       <Nav />
 
-      <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5 px-2.5">
+      <div className="w-full max-w-6xl flex flex-col gap-5 items-start px-4 py-2.5">
         <h1 className="text-gray-800 text-2xl sm:text-3xl">
           Inspiration for your first order
         </h1>
@@ -67,6 +83,7 @@ const UserDashboard = () => {
               <CategoryCard data={cate} key={index} />
             ))}
           </div>
+
           {showRightCateButton && (
             <button
               className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2
@@ -77,6 +94,12 @@ const UserDashboard = () => {
             </button>
           )}
         </div>
+      </div>
+
+      <div className="w-full max-w-6xl flex flex-col gap-5 items-start px-4 py-2.5">
+        <h1 className="text-gray-800 text-2xl sm:text-3xl">
+          Best Shop in {currentCity}
+        </h1>
       </div>
     </div>
   );
