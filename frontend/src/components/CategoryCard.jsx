@@ -1,6 +1,6 @@
 import React from "react";
 
-const CategoryCard = ({ name, image }) => {
+const CategoryCard = ({ image, name }) => {
   return (
     <div
       className="w-[120px] h-[120px] md:w-[180px] md:h-[180px] rounded-2xl

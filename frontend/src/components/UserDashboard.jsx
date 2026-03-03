@@ -4,8 +4,12 @@ import { categories } from "../category";
 import CategoryCard from "./CategoryCard";
 import { FaCircleArrowLeft, FaCircleArrowRight } from "react-icons/fa6";
 import { useSelector } from "react-redux";
+import FoodCard from "./FoodCard";
 
 const UserDashboard = () => {
+  const { currentCity, shopsInMyCity, itemsInMyCity } = useSelector(
+    (state) => state.user,
+  );
   const cateScrollRef = useRef();
   const shopScrollRef = useRef();
   const [showLeftCateButton, setShowLeftCateButton] = useState(false);
@@ -13,8 +17,6 @@ const UserDashboard = () => {
 
   const [showLeftShopButton, setShowLeftShopButton] = useState(false);
   const [showRightShopButton, setShowRightShopButton] = useState(false);
-
-  const { currentCity, shopsInMyCity } = useSelector((state) => state.user);
 
   const updateButton = (ref, showLeftButton, showRightButton) => {
     const element = ref.current;
@@ -36,48 +38,50 @@ const UserDashboard = () => {
   };
 
   useEffect(() => {
-    if (cateScrollRef.current) {
+    const cateElement = cateScrollRef.current;
+    const shopElement = shopScrollRef.current;
+
+    const handleCateScroll = () => {
       updateButton(
         cateScrollRef,
         setShowLeftCateButton,
         setShowRightCateButton,
       );
+    };
+
+    const handleShopScroll = () => {
       updateButton(
         shopScrollRef,
         setShowLeftShopButton,
         setShowRightShopButton,
       );
-      cateScrollRef.current.addEventListener("scroll", () => {
-        updateButton(
-          cateScrollRef,
-          setShowLeftCateButton,
-          setShowRightCateButton,
-        );
-      });
-      shopScrollRef.current.addEventListener("scroll", () => {
-        updateButton(
-          shopScrollRef,
-          setShowLeftShopButton,
-          setShowRightShopButton,
-        );
-      });
+    };
+
+    if (cateElement) {
+      updateButton(
+        cateScrollRef,
+        setShowLeftCateButton,
+        setShowRightCateButton,
+      );
+      cateElement.addEventListener("scroll", handleCateScroll);
+    }
+
+    if (shopElement) {
+      updateButton(
+        shopScrollRef,
+        setShowLeftShopButton,
+        setShowRightShopButton,
+      );
+      shopElement.addEventListener("scroll", handleShopScroll);
     }
 
     return () => {
-      cateScrollRef.current.removeEventListener("scroll", () => {
-        updateButton(
-          cateScrollRef,
-          setShowLeftCateButton,
-          setShowRightCateButton,
-        );
-      });
-      shopScrollRef.current.removeEventListener("scroll", () => {
-        updateButton(
-          shopScrollRef,
-          setShowLeftShopButton,
-          setShowRightShopButton,
-        );
-      });
+      if (cateElement) {
+        cateElement.removeEventListener("scroll", handleCateScroll);
+      }
+      if (shopElement) {
+        shopElement.removeEventListener("scroll", handleShopScroll);
+      }
     };
   }, [categories]);
 
@@ -104,9 +108,9 @@ const UserDashboard = () => {
             className="w-full flex overflow-x-auto gap-4 pb-2 "
             ref={cateScrollRef}
           >
-            {categories?.map((cate, index) => (
+            {categories.map((cate, index) => (
               <CategoryCard
-                name={cate.category}
+                name={cate.categories}
                 image={cate.image}
                 key={index}
               />
@@ -165,6 +169,12 @@ const UserDashboard = () => {
         <h1 className="text-gray-800 text-2xl sm:text-3xl">
           Suggested Food Items
         </h1>
+
+        <div className="w-full h-auto flex flex-wrap gap-[20px] justify-center">
+          {itemsInMyCity?.map((item, index) => (
+            <FoodCard key={index} data={item} />
+          ))}
+        </div>
       </div>
     </div>
   );
